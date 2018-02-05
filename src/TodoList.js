@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './TodoList.css';
 import TodoItems from './TodoItems';
+import { toASCII } from 'punycode';
 
 class TodoList extends React.Component {
   constructor(props, context) {
@@ -14,16 +15,6 @@ class TodoList extends React.Component {
     this.deleteItem = this.deleteItem.bind(this);
     this.strikeOut = this.strikeOut.bind(this);
   }
-
-
-
-
-  /*onChange(e){
-      let newItems = this.state.items
-      newItems.push(e.target.value)
-      this.setState({items :newItems})
-    }*/
-
 
   addItem(e) {
     var itemArray = this.state.items;
@@ -54,6 +45,20 @@ class TodoList extends React.Component {
     var filteredItems = this.state.items.filter(function (item) {
       if (item.key === key && item.stat === "done")
       {
+
+    //write to c drive
+    
+    var element = document.createElement("a");
+       
+   // var file = new Blob([document.getElementById('myInput').value], {type: 'text/plain'});
+    var file = new Blob([item.text], {type: 'text/plain'});
+    
+    element.href = URL.createObjectURL(file);
+    element.download = "file://c:/todoList/today.txt";
+    element.click();
+
+
+
           return (item.key !== key);
         };
       
@@ -66,7 +71,12 @@ class TodoList extends React.Component {
       {
         return (item)
       }
+
+
     });
+
+
+    
 
     this.setState({
       items: filteredItems
