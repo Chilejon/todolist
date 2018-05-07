@@ -1,16 +1,38 @@
 <html>
 <head>
     <title>World Cup 2018</title>
+    <style>
+            #customers {
+                font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+            
+            #customers td, #customers th {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+            
+            #customers tr:nth-child(even){background-color: #f2f2f2;}
+            
+            #customers tr:hover {background-color: #ddd;}
+            
+            #customers th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #4CAF50;
+                color: white;
+            }
+            </style>
 </head>
 <body>
 <section>Who has who?</section>
 <section>
-<table>
-<th>
+<table  id="customers">
     <tr>
-        <td>Team</td><td>Backer</td><td>Paid?</td>
+        <th>Team</th><th>Backer</th><th>Paid?</th>
         </tr>
-</th>
 <tr>
     <td>Belgium</td><td>Neville Herod, Paul Dickens, Tom Ward</td><td>YYN</td>
 </tr>
@@ -47,3 +69,5 @@
 </body>
 
 </html>
+
+
