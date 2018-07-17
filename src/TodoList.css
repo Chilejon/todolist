@@ -1,6 +1,6 @@
 body {
     padding: 50px;
-    background-color: #66CCFF;
+    background-color: #FFFFFF;
     font-family: sans-serif;
   }
   #container {
@@ -11,7 +11,7 @@ body {
   .todoListMain .header input {
     padding: 10px;
     font-size: 16px;
-    border: 2px solid #FFF;
+    border: 2px solid #CCCCCc;
     width: 165px;
   }
 
@@ -19,7 +19,7 @@ body {
     padding: 9px;
     margin-left: 20px;
     font-size: 16px;
-    border: 2px solid #FFF;
+    border: 2px solid #CCCCCC;
     width: 160px;
   }
 
@@ -28,7 +28,7 @@ body {
     font-size: 16px;
     margin: 10px;
     margin-right: 0px;
-    background-color: #0066FF;
+    background-color: rgb(255, 0, 0);
     color: #FFF;
     border: 2px solid #0066FF;
   }

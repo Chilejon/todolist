@@ -6,16 +6,65 @@ class TodoList extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      monthlyCost: "No data",
+      monthlyPayment: 0.00,
       todaysDate: new Date(),
       lastPaymentDate: "",
-      monthsLeft: 0,
-      debt:0
+      monthsLeftToPay: 0,
+      totalDebt:0.00,
+      paymentDay:15, //1 15 or 25
+      debt:0.00,
+      paymentSchedule: [],
+      payDiff:0.00,
+      firstPaymentDate:""
     };
+
+    this.addDays = this.addDays.bind(this);
+
   }
 
+ addDays = (date) => {
+    var result = new Date(date);
+    result.setDate(date.getDate() + 21);
+    return result;
+}
+  
   handleChange = (event) => {
     var lastPaymentDate = new Date()
+    
+    var firstPaymentDate = lastPaymentDate.getDate() + "/" + (lastPaymentDate.getMonth()+1) + "/" + lastPaymentDate.getFullYear();
+    
+    var paymentDay = this.menu.value
+    var tempDate = new Date(lastPaymentDate.getFullYear(), (lastPaymentDate.getDate() + 1), paymentDay)
+    
+    
+    var dateNow = new Date()
+    var twentyOneDaysLater = new Date(dateNow.getFullYear(), dateNow.getDate(), dateNow.getDay())
+    alert(dateNow) 
+    //twentyOneDaysLater.setDate(twentyOneDaysLater.getDate() + 21)
+
+    alert(this.addDays(dateNow))
+
+    //var date1 = new Date(2018, 6, 16)
+    //var date2 = new Date(2018, 6, 13)
+    
+   
+    // if (date1 > date2) {
+
+    //   //alert(date1 + "Date One is greather then Date Two." + date2);
+
+    // }else {
+
+    //   //alert(date1 + "Date Two is greather then Date One." + date2);
+
+    // }
+
+
+
+    
+
+
+
+
     //testing jan feb march dates
     //lastPaymentDate = new Date("2018", "10", "1")
     var todaysDate = lastPaymentDate 
@@ -40,11 +89,53 @@ class TodoList extends React.Component {
      months -= lastPaymentDate.getMonth() + 1;
      months += todaysDate.getMonth();
      months = Math.abs(months)
-     this.setState({ monthsLeft: months})
+     this.setState({ monthsLeftToPay: months})
      
-     var debt = this._inputElement.value / months
+     var inputDebt = this._inputElement.value
+
+     var debt = inputDebt / months
      debt = Math.round(debt*100)/100  
-     this.setState({ monthlyCost: debt, debt: this._inputElement.value })
+     this.setState({ monthlyPayment: debt, debt: inputDebt })
+
+    var paymentSchedule = []
+    var i;
+    for (i = 0; i < months; i++) { 
+      paymentSchedule.push(firstPaymentDate + " : " + debt)
+    }
+
+    var willPay = months*debt
+    var payDiff
+    if(willPay < inputDebt)
+    {
+      payDiff = inputDebt-willPay
+      //payDiff = (Math.round(payDiff + "e+2")  + "e-2")
+      payDiff = parseFloat(Math.round(payDiff*100)/100).toFixed(2) 
+
+      var temp = paymentSchedule[0] + payDiff
+      
+      temp = parseFloat(Math.round(temp*100)/100).toFixed(2)
+      
+      if(isNaN(temp) == false)
+      {
+        paymentSchedule[0] = temp
+      }
+    }
+
+    if(willPay > inputDebt)
+    {
+      payDiff = willPay-inputDebt
+      payDiff = parseFloat(Math.round(payDiff*100)/100).toFixed(2) 
+      //payDiff = (Math.round(payDiff + "e+2")  + "e-2") 
+
+      var temp = paymentSchedule[0] - payDiff
+      temp = parseFloat(Math.round(temp*100)/100).toFixed(2) 
+
+      if(isNaN(temp) == false)
+      {
+        paymentSchedule[0] = temp
+      }
+    }
+     this.setState({paymentSchedule: paymentSchedule})
   };
 
   render() {
@@ -55,43 +146,27 @@ class TodoList extends React.Component {
             <input ref={(a) => this._inputElement = a}
               placeholder="debt" required id="txtDebt" onChange={this.handleChange}>
             </input>
-            <select id="payDate" ref = {(input)=> this.menu = input} required>
-            <option value="1" selected>1st</option>
-            <option value="15">15th</option>
+            Preferred day of month:
+            <select id="paymentDay" ref = {(input)=> this.menu = input} required>
+            <option value="1">1st</option>
+            <option value="15" selected>15th</option>
             <option value="25th">25th</option>
             </select>
             
-            {/* <select id="months" onChange={this.handleChange}  ref = {(input)=> this.menu = input} required>
-            <option value="">Select</option>
-            <option value="12">12</option>
-            <option value="11">11</option>
-            <option value="10">10</option>
-            <option value="9">9</option>
-            <option value="8">8</option>
-            <option value="7">7</option>
-            <option value="6">6</option>
-            <option value="5">5</option>
-            <option value="4">4</option>
-            <option value="3">3</option>
-            <option value="2">2</option>
-            <option value="1">1</option>
-            </select> */}
+            
           </form>
         </div>
-        
-        
-        
         <div>
           <br/>
 
-          Monthy cost: <strong> {this.state.monthlyCost} </strong>
+          Monthly cost: <strong> {this.state.monthlyPayment} </strong>
           
           <br/>
-          Debt: <strong> {this.state.debt} </strong>
+          Total Debt: <strong> {this.state.debt} </strong>
           
           <br/>
-          Months Left: <strong> {this.state.monthsLeft} </strong>
-          
+          Months Left: <strong> {this.state.monthsLeftToPay} </strong>
+          <hr/>
           <br/>
           Today's date: <strong> {new Intl.DateTimeFormat('en-GB', { 
           year: 'numeric', 
@@ -107,6 +182,13 @@ class TodoList extends React.Component {
           day: '2-digit' 
         }).format(this.state.lastPaymentDate)} </strong>
 
+        <hr/>
+        
+        {this.state.paymentSchedule.map (function(item, i){
+          return <div>Month:{i+1} Pay:{item}</div>
+        }
+        )}
+
       </div>  
       </div>
     );
@@ -114,3 +196,19 @@ class TodoList extends React.Component {
 };
 
 export default TodoList;
+
+/* <select id="months" onChange={this.handleChange}  ref = {(input)=> this.menu = input} required>
+            <option value="">Select</option>
+            <option value="12">12</option>
+            <option value="11">11</option>
+            <option value="10">10</option>
+            <option value="9">9</option>
+            <option value="8">8</option>
+            <option value="7">7</option>
+            <option value="6">6</option>
+            <option value="5">5</option>
+            <option value="4">4</option>
+            <option value="3">3</option>
+            <option value="2">2</option>
+            <option value="1">1</option>
+            </select> */
